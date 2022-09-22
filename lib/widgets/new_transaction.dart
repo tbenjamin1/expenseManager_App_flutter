@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addNewTx;
@@ -6,20 +7,39 @@ class NewTransaction extends StatefulWidget {
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
-}class _NewTransactionState extends State<NewTransaction> {
+}
+
+class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
 
   final amountControllet = TextEditingController();
 
+  var selectedDate;
+
   void submitData() {
     final enteredTitle = titleController.text;
     final enteredAmount = double.parse(amountControllet.text);
-    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+    if (enteredTitle.isEmpty || enteredAmount <= 0 || selectedDate == null) {
       return;
     }
-    widget.addNewTx(enteredTitle, enteredAmount);
+    widget.addNewTx(enteredTitle, enteredAmount,selectedDate);
 
     Navigator.of(context).pop();
+  }
+
+  void presentDatePicker() {
+    showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2018),
+        lastDate: DateTime.now()).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -46,14 +66,23 @@ class NewTransaction extends StatefulWidget {
               height: 70,
               child: Row(
                 children: <Widget>[
-                Text('No Date Chosen !'),
-                FlatButton(onPressed: null, child:Text('choose date ',style:TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.bold)   ,))
+                  Text( selectedDate == null
+                          ? 'No Date Chosen!'
+                          : 'Picked Date: ${DateFormat.yMd().format(selectedDate)}',),
+                  FlatButton(
+                      onPressed: presentDatePicker,
+                      child: Text(
+                        'choose date ',
+                        style: TextStyle(
+                            color: Colors.blueGrey,
+                            fontWeight: FontWeight.bold),
+                      ))
                 ],
               ),
             ),
             RaisedButton(
                 onPressed: submitData,
-                color:Colors.purple,
+                color: Colors.purple,
                 child: Text(
                   'Add transaction',
                   style: TextStyle(color: Colors.white),

@@ -4,7 +4,8 @@ import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transaction;
-  TransactionList(this.transaction);
+  final Function deleteTransaction;
+  TransactionList(this.transaction,this.deleteTransaction);
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +30,15 @@ class TransactionList extends StatelessWidget {
                  decoration: BoxDecoration(
                   color:Colors.blueGrey,
                   shape: BoxShape.circle,
-
                  ),
                   child:Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: FittedBox(child: Text('\$${transaction[index].amount.toStringAsFixed(2)}')),
+                    child: FittedBox(child: Text('\$${transaction[index].amount.toStringAsFixed(2)}',style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold),)),
                   ),
                 ),
                 title: Text(transaction[index].title,style: Theme.of(context).textTheme.headline6,),
                 subtitle: Text(DateFormat.yMMMd().format(transaction[index].date),),
+                trailing:IconButton(onPressed: ()=>deleteTransaction(transaction[index].id), icon:Icon(Icons.delete,color: Colors.blueGrey,)),
                 ); 
                 
               },
