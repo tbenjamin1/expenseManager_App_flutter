@@ -6,9 +6,7 @@ class NewTransaction extends StatefulWidget {
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
-}
-
-class _NewTransactionState extends State<NewTransaction> {
+}class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
 
   final amountControllet = TextEditingController();
@@ -44,11 +42,21 @@ class _NewTransactionState extends State<NewTransaction> {
               keyboardType: TextInputType.number,
               onSubmitted: (_) => submitData,
             ),
-            FlatButton(
+            Container(
+              height: 70,
+              child: Row(
+                children: <Widget>[
+                Text('No Date Chosen !'),
+                FlatButton(onPressed: null, child:Text('choose date ',style:TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.bold)   ,))
+                ],
+              ),
+            ),
+            RaisedButton(
                 onPressed: submitData,
+                color:Colors.purple,
                 child: Text(
                   'Add transaction',
-                  style: TextStyle(color: Colors.purple),
+                  style: TextStyle(color: Colors.white),
                 ))
           ],
         ),
