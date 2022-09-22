@@ -9,9 +9,7 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      child: transaction.isEmpty
+    return  transaction.isEmpty
           ? Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -23,27 +21,34 @@ class TransactionList extends StatelessWidget {
             )
           : ListView.builder(
               itemBuilder: (context, index) {
-                return ListTile(
-                leading: Container(
-                  height: 60,
-                  width: 60,
-                 decoration: BoxDecoration(
-                  color:Colors.blueGrey,
-                  shape: BoxShape.circle,
-                 ),
-                  child:Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FittedBox(child: Text('\$${transaction[index].amount.toStringAsFixed(2)}',style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold),)),
+                return Card(
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 10
                   ),
-                ),
-                title: Text(transaction[index].title,style: Theme.of(context).textTheme.headline6,),
-                subtitle: Text(DateFormat.yMMMd().format(transaction[index].date),),
-                trailing:IconButton(onPressed: ()=>deleteTransaction(transaction[index].id), icon:Icon(Icons.delete,color: Colors.blueGrey,)),
+                  child: ListTile(
+                  leading: Container(
+                    height: 60,
+                    width: 60,
+                   decoration: BoxDecoration(
+                    color:Colors.blueGrey,
+                    shape: BoxShape.circle,
+                   ),
+                    child:Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FittedBox(child: Text('\$${transaction[index].amount.toStringAsFixed(2)}',style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold),)),
+                    ),
+                  ),
+                  title: Text(transaction[index].title,style:TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
+                  subtitle: Text(DateFormat.yMMMd().format(transaction[index].date),),
+                  trailing:IconButton(onPressed: ()=>deleteTransaction(transaction[index].id), icon:Icon(Icons.delete,color: Colors.blueGrey,)),
+                  ),
                 ); 
                 
               },
               itemCount: transaction.length,
-            ),
-    );
+            );
+    
   }
 }
