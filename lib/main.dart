@@ -3,8 +3,17 @@ import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './model/transaction.dart';
 import './widgets/chart.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
+void main() {
+
+//   WidgetsFlutterBinding.ensureInitialized();
+//   SystemChrome.setPreferredOrientations([
+// DeviceOrientation.portraitUp,
+// DeviceOrientation.portraitDown
+//   ]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -35,6 +44,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  bool showChart=false;
   final List<Transaction> _userTransactions = [];
 
   List<Transaction> get _recentTransactions {
@@ -103,11 +114,23 @@ final appBar= AppBar(
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top )*0.4,
-              child: Chart(_recentTransactions)),
-            Container(
-              height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top)*0.6,
+           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Show Chart'),
+              Switch(value: showChart, onChanged: (val){
+                setState(() {
+                  showChart=val;
+                });
+              })
+            ],
+           ),
+
+          showChart?  Container(
+              height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top )*0.3,
+              child: Chart(_recentTransactions))
+            :Container(
+              height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top)*0.7,
               child: TransactionList(_userTransactions,deleteTransaction)),
           ],
         ),
