@@ -6,7 +6,6 @@ import './widgets/chart.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-
 //   WidgetsFlutterBinding.ensureInitialized();
 //   SystemChrome.setPreferredOrientations([
 // DeviceOrientation.portraitUp,
@@ -44,8 +43,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  bool showChart=false;
+  bool showChart = false;
   final List<Transaction> _userTransactions = [];
 
   List<Transaction> get _recentTransactions {
@@ -93,19 +91,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-final appBar= AppBar(
-        title: Text(
-          'Personal Expense',
-          style: TextStyle(fontFamily: 'Quicksand',fontWeight: FontWeight.bold),
+    final isLandScape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final appBar = AppBar(
+      title: Text(
+        'Personal Expense',
+        style: TextStyle(fontFamily: 'Quicksand', fontWeight: FontWeight.bold),
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => _startAddNewTransaction(context),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _startAddNewTransaction(context),
-          ),
-        ],
-      );
+      ],
+    );
+
+    final txListWidget =Container(
+              height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top)*0.7,
+              child: TransactionList(_userTransactions,deleteTransaction)) ;
 
     return Scaffold(
       appBar: appBar,
@@ -114,24 +117,40 @@ final appBar= AppBar(
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Show Chart'),
-              Switch(value: showChart, onChanged: (val){
-                setState(() {
-                  showChart=val;
-                });
-              })
-            ],
-           ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                if (isLandScape)Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Show Chart'),
+                    ],
+                  ),
+               if (isLandScape) Switch(
+                    value: showChart,
+                    onChanged: (val) {
+                      setState(() {
+                        showChart = val;
+                      });
+                    })
+              ],
+            ),
+            if(!isLandScape)Container(
+                    height: (MediaQuery.of(context).size.height -
+                            appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top) *
+                        0.7,
+                    child: Chart(_recentTransactions)),
+                    if(!isLandScape)txListWidget,
 
-          showChart?  Container(
-              height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top )*0.3,
-              child: Chart(_recentTransactions))
-            :Container(
-              height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top)*0.7,
-              child: TransactionList(_userTransactions,deleteTransaction)),
+          if(isLandScape) showChart
+                ? Container(
+                    height: (MediaQuery.of(context).size.height -
+                            appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top) *
+                        0.7,
+                    child: Chart(_recentTransactions))
+                : txListWidget
           ],
         ),
       ),
